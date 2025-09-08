@@ -1,0 +1,31 @@
+---
+description: UzdevumuMeistars.lv jautājumu bankas un testu pamatnoteikumi
+globs:
+  - 'database/seeders/**/*.php'
+  - 'resources/js/components/**/*.vue'
+  - 'app/Models/Question.php'
+alwaysApply: true
+---
+
+## Jautājumu struktūra
+
+- Katram jautājumam jābūt šādiem laukiem: `grade`, `topic`, `subtopic`, `difficulty`, `question_type`, `question_text`, `choices`, `correct_answer`, `diagram_url` (ja nepieciešams), `metadata`.
+- Visi vizuālie jautājumi jānorāda ar `diagram_url` vai `diagram_metadata`.
+- Grūtības pakāpe jānorāda skaitliski (1-5).
+
+## Importēšanas noteikumi
+
+- Importa failiem jābūt JSON vai CSV formātā.
+- Seeder skripts pārbauda, vai visi nepieciešamie lauki ir aizpildīti.
+- Duplicēti jautājumi tajā pašā temata/apakštēmas kombinācijā nav atļauti.
+
+## Adaptīvā un gala testu loģika
+
+- Self-test jautājumi jāizvēlas nejauši no atbilstošās tēmas un grūtības.
+- Gala testiem jāaptver visas apakštēmas un jābūt nokārtojamam ar definētu procentu (piem., ≥70%).
+- Tēmas nākamās tēmas atslēgšana iespējama tikai pēc gala testa nokārtošanas.
+
+## Gamifikācija
+
+- XP un nozīmītes tiek piešķirtas par self-testiem un gala testiem.
+- Streaks un leaderboard jāatjauno katru reizi, kad lietotājs pabeidz testu.
