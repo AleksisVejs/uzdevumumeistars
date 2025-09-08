@@ -1,0 +1,26 @@
+---
+description: Guidelines for implementing the adaptive self-test feature.
+globs:
+  - 'app/Http/Controllers/SelfTestController.php'
+  - 'resources/js/components/SelfTest.vue'
+alwaysApply: false
+---
+
+## Self-Test Logic
+
+- **Question Selection**: Randomly select questions from the topic's question bank, ensuring a mix of difficulty levels.
+- **Adaptive Difficulty**: Adjust the difficulty of subsequent questions based on the user's performance.
+- **Time Constraints**: Implement a timer to simulate test conditions and encourage time management.
+- **Feedback Mechanism**: Provide immediate feedback on answers to facilitate learning.
+
+## User Progress Tracking
+
+- **Progress Storage**: Store user progress in the `user_topic_progress` table with fields for `status` and `attempts`.
+- **Unlock Criteria**: Unlock subsequent topics based on passing the final test of the current topic.
+- **Retry Mechanism**: Allow users to retake failed tests with a different set of questions.
+
+## Frontend Interaction
+
+- **UI Components**: Develop Vue components to display questions, options, and timers.
+- **State Management**: Use Vuex to manage the state of the self-test, including current question, score, and timer.
+- **User Interface**: Design a user-friendly interface with clear navigation and progress indicators.

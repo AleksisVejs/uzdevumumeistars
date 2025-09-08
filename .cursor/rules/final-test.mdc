@@ -1,0 +1,26 @@
+---
+description: Guidelines for implementing the final test feature for each topic.
+globs:
+  - 'app/Http/Controllers/FinalTestController.php'
+  - 'resources/js/components/FinalTest.vue'
+alwaysApply: false
+---
+
+## Final Test Structure
+
+- **Question Pool**: Each final test consists of a fixed number of questions randomly selected from the topic's question bank.
+- **Passing Criteria**: Users must answer at least 70% of the questions correctly to pass.
+- **Time Limit**: Implement a time limit to simulate real exam conditions.
+- **Result Feedback**: Provide detailed feedback on performance, highlighting areas of strength and improvement.
+
+## Backend Logic
+
+- **Test Generation**: Dynamically generate final tests based on the topic's question bank.
+- **Result Calculation**: Calculate the user's score and determine pass/fail status.
+- **Progress Update**: Update the `user_topic_progress` table to reflect the user's performance.
+
+## Frontend Interaction
+
+- **UI Components**: Develop Vue components to display the final test questions, options, timer, and results.
+- **State Management**: Use Vuex to manage the state of the final test, including current question, score, and timer.
+- **User Interface**: Design a clean and intuitive interface with clear instructions and progress indicators.

@@ -1,0 +1,50 @@
+---
+description: Core guidelines for the UzdevumuMeistars.lv project.
+globs:
+  - '**/*.php'
+  - '**/*.js'
+  - '**/*.vue'
+  - '**/*.css'
+alwaysApply: true
+---
+
+## General Development Practices
+
+- **Code Simplicity**: Prioritize clarity and simplicity in code to facilitate maintenance and collaboration.
+- **Scalability**: Design components and architecture with future growth in mind.
+- **Reusability**: Implement modular code to promote reuse across different parts of the application.
+- **Naming Conventions**: Use descriptive and consistent naming conventions for variables, functions, and components.
+
+## Laravel Backend Standards
+
+- **Routing**: Define routes in `routes/web.php` and `routes/api.php` following RESTful conventions.
+- **Controllers**: Keep controllers slim; delegate business logic to service classes.
+- **Validation**: Use form request validation classes for input validation.
+- **Authentication**: Implement user authentication using Laravel Sanctum for API token management.
+
+## Vue.js Frontend Standards
+
+- **Component Structure**: Organize components in the `resources/js/components` directory.
+- **State Management**: Utilize Vuex for state management across components.
+- **Routing**: Define routes in `resources/js/router/index.js` using Vue Router.
+- **Styling**: Apply Tailwind CSS classes for styling; avoid inline styles.
+
+## Tailwind CSS Usage
+
+- **Utility-First Approach**: Leverage Tailwind's utility classes for styling.
+- **Custom Styles**: Extend Tailwind's configuration in `tailwind.config.js` for project-specific styles.
+- **Responsive Design**: Ensure components are responsive using Tailwind's responsive utilities.
+
+## MySQL Database Design
+
+- **Naming Conventions**: Use snake_case for table and column names.
+- **Indexes**: Define indexes on columns frequently used in queries.
+- **Foreign Keys**: Establish foreign key relationships to maintain referential integrity.
+- **Timestamps**: Include `created_at` and `updated_at` columns in all tables.
+
+## Testing and Quality Assurance
+
+- **Unit Tests**: Write unit tests for critical business logic using PHPUnit.
+- **Feature Tests**: Implement feature tests to verify user interactions and workflows.
+- **Linting**: Use PHP_CodeSniffer and ESLint to enforce coding standards.
+- **CI/CD**: Set up continuous integration and deployment pipelines to automate testing and deployment processes.

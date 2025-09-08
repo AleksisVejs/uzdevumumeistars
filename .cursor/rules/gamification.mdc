@@ -1,0 +1,25 @@
+---
+description: Guidelines for implementing gamification features to enhance user engagement.
+globs:
+  - 'app/Models/User.php'
+  - 'resources/js/components/Leaderboard.vue'
+alwaysApply: false
+---
+
+## Gamification Features
+
+- **XP System**: Award experience points (XP) for completing self-tests, final tests, and other activities.
+- **Badges**: Grant badges for achieving milestones, such as completing all tests in a topic or maintaining a streak.
+- **Leaderboards**: Display leaderboards to foster competition and motivation among users.
+
+## User Progression
+
+- **XP Tracking**: Store and update the user's XP in the `users` table.
+- **Badge Assignment**: Assign badges based on predefined criteria and store them in a pivot table.
+- **Streak Tracking**: Monitor and reset streaks based on user activity.
+
+## Frontend Interaction
+
+- **UI Components**: Develop Vue components to display XP, badges, and leaderboards.
+- **State Management**: Use Vuex to manage the state of gamification features.
+- **User Interface**: Design engaging and visually appealing interfaces to motivate users.
