@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Test;
 use App\Models\Topic;
 use App\Services\FinalTestService;
+use App\Services\SelfTestService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -34,10 +35,18 @@ class FinalTestController extends Controller
         return response()->json($test, 201);
     }
 
+    public function show(Test $test)
+    {
+        $this->authorize('view', $test);
+        
+        return response()->json($test);
+    }
+
     public function getQuestions(Test $test)
     {
         $this->authorize('view', $test);
         
+        // Both final tests and self tests use the same getTestQuestions method
         $questions = $this->service->getTestQuestions($test);
         
         return response()->json($questions);

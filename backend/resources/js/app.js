@@ -27,7 +27,7 @@ const store = createStore({
                 async fetch({ commit }) {
                     commit('setLoading', true);
                     try {
-                        const { data } = await axios.get('/api/topics/unlocked');
+                        const { data } = await axios.get('/topics/unlocked');
                         commit('set', data);
                     } finally {
                         commit('setLoading', false);
@@ -45,20 +45,20 @@ const store = createStore({
             },
             actions: {
                 async startFinal({ commit }, { topic_id, question_count, time_limit_seconds, grade }) {
-                    const { data } = await axios.post('/api/tests/final', { topic_id, question_count, time_limit_seconds, grade });
+                    const { data } = await axios.post('/tests/final', { topic_id, question_count, time_limit_seconds, grade });
                     commit('setCurrent', data);
                     return data;
                 },
                 async fetchQuestions({ state, commit }) {
                     if (!state.current) return [];
-                    const { data } = await axios.get(`/api/tests/${state.current.id}/questions`);
+                    const { data } = await axios.get(`/tests/${state.current.id}/questions`);
                     commit('setQuestions', data);
                     return data;
                 },
                 async submitFinal({ state, commit }, { answers }) {
                     commit('setSubmitting', true);
                     try {
-                        const { data } = await axios.post(`/api/tests/${state.current.id}/final/submit`, { answers });
+                        const { data } = await axios.post(`/tests/${state.current.id}/final/submit`, { answers });
                         commit('setCurrent', data);
                         return data;
                     } finally {
@@ -66,14 +66,14 @@ const store = createStore({
                     }
                 },
                 async startSelf({ commit }, { topic_id, question_count, grade }) {
-                    const { data } = await axios.post('/api/tests/self', { topic_id, question_count, grade });
+                    const { data } = await axios.post('/tests/self', { topic_id, question_count, grade });
                     commit('setCurrent', data);
                     return data;
                 },
                 async submitSelf({ state, commit }, { answers }) {
                     commit('setSubmitting', true);
                     try {
-                        const { data } = await axios.post(`/api/tests/${state.current.id}/self/submit`, { answers });
+                        const { data } = await axios.post(`/tests/${state.current.id}/self/submit`, { answers });
                         commit('setCurrent', data.test);
                         return data;
                     } finally {
@@ -94,7 +94,7 @@ const store = createStore({
             },
             actions: {
                 async fetch({ commit }) {
-                    const { data } = await axios.get('/api/user/progress/topics');
+                    const { data } = await axios.get('/user/progress/topics');
                     commit('set', data);
                 },
             },

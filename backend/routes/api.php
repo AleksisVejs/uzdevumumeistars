@@ -15,8 +15,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) { return $request->user(); });
 
     Route::get('/topics/unlocked', [TopicController::class, 'unlocked']);
+    Route::get('/topics/{topic}/has-questions/{grade}', [TopicController::class, 'hasQuestionsForGrade']);
 
     Route::post('/tests/final', [FinalTestController::class, 'start']);
+    Route::get('/tests/{test}', [FinalTestController::class, 'show']);
     Route::get('/tests/{test}/questions', [FinalTestController::class, 'getQuestions']);
     Route::post('/tests/{test}/final/submit', [FinalTestController::class, 'submit']);
 

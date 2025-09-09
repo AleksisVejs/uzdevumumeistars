@@ -301,4 +301,29 @@ class SelfTestService
 
         return $analysis;
     }
+
+    public function getTestQuestions(Test $test): array
+    {
+        return $test->testQuestions()
+            ->with(['question.answers'])
+            ->orderBy('order')
+            ->get()
+            ->map(function ($testQuestion) {
+                return [
+                    'id' => $testQuestion->question->id,
+                    'order' => $testQuestion->order,
+                    'question_text' => $testQuestion->question->question_text,
+                    'difficulty' => $testQuestion->question->difficulty,
+                    'points' => $testQuestion->question->points,
+                    'answers' => $testQuestion->question->answers->map(function ($answer) {
+                        return [
+                            'id' => $answer->id,
+                            'answer_text' => $answer->answer_text,
+                            'order' => $answer->order,
+                        ];
+                    }),
+                ];
+            })
+            ->toArray();
+    }
 }

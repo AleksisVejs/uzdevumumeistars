@@ -9,3 +9,62 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+/* Dark theme as default */
+html {
+    color-scheme: dark;
+}
+
+/* Custom selection styling for dark theme */
+::selection {
+    background-color: rgb(16 185 129); /* emerald-500 */
+    color: white;
+}
+
+::-moz-selection {
+    background-color: rgb(16 185 129); /* emerald-500 */
+    color: white;
+}
+
+/* Focus styles for better accessibility */
+.focus\:ring-emerald-200:focus {
+    --tw-ring-color: rgb(167 243 208);
+}
+
+/* Custom radio button styling for dark theme */
+input[type="radio"]:checked {
+    background-color: rgb(16 185 129); /* emerald-500 */
+    border-color: rgb(16 185 129);
+}
+
+/* Hover states for interactive elements */
+.hover\:translate-y-\[-2px\]:hover {
+    transform: translateY(-2px);
+}
+
+/* Active states for buttons */
+.active\:scale-95:active {
+    transform: scale(0.95);
+}
+
+/* Disabled states */
+.disabled\:active\:scale-100:disabled:active {
+    transform: scale(1);
+}
+
+/* Dark theme custom styles */
+.dark-card {
+    @apply bg-gray-800 border-gray-700 text-gray-100;
+}
+
+.dark-input {
+    @apply bg-gray-800 border-gray-600 text-gray-100 placeholder-gray-400 focus:border-emerald-500 focus:ring-emerald-200;
+}
+
+.dark-button-primary {
+    @apply bg-emerald-500 text-white hover:bg-emerald-600 active:scale-95 transition;
+}
+
+.dark-button-secondary {
+    @apply border border-indigo-500 text-indigo-400 hover:bg-indigo-900/20 active:scale-95 transition;
+}
