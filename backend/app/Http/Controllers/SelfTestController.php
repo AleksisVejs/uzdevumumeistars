@@ -18,6 +18,16 @@ class SelfTestController extends Controller
             'topic_id' => ['required', 'integer', 'exists:topics,id'],
             'question_count' => ['nullable', 'integer', 'min:1', 'max:50'],
             'grade' => ['nullable', 'integer', 'min:1', 'max:12'],
+        ], [
+            'topic_id.required' => 'Tēmas ID ir obligāts',
+            'topic_id.integer' => 'Tēmas ID jābūt skaitlim',
+            'topic_id.exists' => 'Tēma nav atrasta',
+            'question_count.integer' => 'Jautājumu skaitam jābūt skaitlim',
+            'question_count.min' => 'Jautājumu skaitam jābūt vismaz 1',
+            'question_count.max' => 'Jautājumu skaits nedrīkst pārsniegt 50',
+            'grade.integer' => 'Klasei jābūt skaitlim',
+            'grade.min' => 'Klasei jābūt vismaz 1',
+            'grade.max' => 'Klasei jābūt ne vairāk par 12',
         ]);
 
         $user = Auth::user();
@@ -47,6 +57,12 @@ class SelfTestController extends Controller
         $data = $request->validate([
             'answers' => ['required', 'array'],
             'answers.*' => ['required', 'integer', 'exists:answers,id'],
+        ], [
+            'answers.required' => 'Atbildes ir obligātas',
+            'answers.array' => 'Atbildēm jābūt masīvam',
+            'answers.*.required' => 'Katrai atbildei jābūt norādītai',
+            'answers.*.integer' => 'Atbildes ID jābūt skaitlim',
+            'answers.*.exists' => 'Atbilde nav atrasta',
         ]);
 
         $result = $this->service->submitSelfTest($test, $data['answers']);

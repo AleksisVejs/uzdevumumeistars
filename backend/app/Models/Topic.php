@@ -14,6 +14,7 @@ class Topic extends Model
     protected $fillable = [
         'name',
         'slug',
+        'theory',
         'prerequisite_level',
         'next_topic_ids',
     ];

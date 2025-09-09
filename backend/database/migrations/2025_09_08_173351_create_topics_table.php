@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug')->unique();
+            $table->text('theory')->nullable();
             $table->unsignedTinyInteger('prerequisite_level')->default(0);
             $table->json('next_topic_ids')->nullable();
             $table->timestamps();

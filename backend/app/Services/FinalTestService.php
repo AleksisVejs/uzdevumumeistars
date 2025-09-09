@@ -6,6 +6,8 @@ use App\Models\Test;
 use App\Models\Topic;
 use App\Models\User;
 use App\Models\UserTopicProgress;
+use App\Models\UserActivity;
+use App\Models\UserStreak;
 use App\Models\Badge;
 use App\Models\Question;
 use App\Models\TestQuestion;
@@ -17,9 +19,35 @@ class FinalTestService
 {
     public const PASS_THRESHOLD_PERCENT = 70;
 
+    protected function validateTopicAccess(User $user, Topic $topic): void
+    {
+        $progress = UserTopicProgress::where('user_id', $user->id)
+            ->where('topic_id', $topic->id)
+            ->first();
+
+        if (!$progress) {
+            // No progress record exists - check if this should be unlocked by default
+            if ($topic->prerequisite_level == 1) {
+                // First level topics are unlocked by default
+                return;
+            } else {
+                throw new \Exception("Šī tēma ir bloķēta. Vispirms nokārtojiet iepriekšējās tēmas.");
+            }
+        }
+
+        $status = $progress->status;
+
+        if ($status === TopicStatus::Locked) {
+            throw new \Exception("Šī tēma ir bloķēta. Vispirms nokārtojiet iepriekšējās tēmas.");
+        }
+    }
+
     public function startFinalTest(User $user, Topic $topic, int $questionCount, ?int $timeLimitSeconds = null, ?int $grade = null): Test
     {
         return DB::transaction(function () use ($user, $topic, $questionCount, $timeLimitSeconds, $grade) {
+            // Check if topic is unlocked for the user
+            $this->validateTopicAccess($user, $topic);
+            
             // Select random questions from the topic, optionally filtered by grade
             $query = Question::where('topic_id', $topic->id)
                 ->where('is_active', true);
@@ -43,6 +71,9 @@ class FinalTestService
                 'user_id' => $user->id,
                 'topic_id' => $topic->id,
                 'type' => 'final_topic_test',
+                'test_type' => 'final',
+                'grade' => $grade,
+                'status' => 'in_progress',
                 'total_questions' => $actualQuestionCount,
                 'time_limit_seconds' => $timeLimitSeconds,
                 'started_at' => Carbon::now(),
@@ -106,6 +137,7 @@ class FinalTestService
                 'score_correct' => $scoreCorrect,
                 'score_total' => $scoreTotal,
                 'passed' => $passed,
+                'status' => 'completed',
                 'submitted_at' => Carbon::now(),
             ]);
 
@@ -122,6 +154,28 @@ class FinalTestService
                 $this->unlockNextTopics($test->user, $test->topic);
                 $this->awardXpAndBadge($test->user, $test->topic);
             }
+
+            // Create activity record
+            $topic = $test->topic;
+            $testType = $passed ? 'Gala tests' : 'Gala tests (neizdevās)';
+            UserActivity::createActivity(
+                $test->user_id,
+                'test_completed',
+                "Pabeidzts {$testType} - {$topic->name}",
+                $passed ? 50 : 10, // More XP for passing
+                [
+                    'test_id' => $test->id,
+                    'topic_id' => $topic->id,
+                    'test_type' => 'final',
+                    'score' => $scoreCorrect,
+                    'total' => $scoreTotal,
+                    'passed' => $passed,
+                    'percentage' => $scoreTotal > 0 ? ($scoreCorrect / $scoreTotal) * 100 : 0
+                ]
+            );
+
+            // Update learning streak
+            UserStreak::updateStreak($test->user_id, 'learning');
 
             // Store detailed results in test metadata
             $test->update(['metadata' => ['detailed_results' => $detailedResults]]);

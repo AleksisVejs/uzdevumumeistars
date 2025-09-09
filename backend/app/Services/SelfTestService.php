@@ -6,6 +6,8 @@ use App\Models\Test;
 use App\Models\Topic;
 use App\Models\User;
 use App\Models\UserTopicProgress;
+use App\Models\UserActivity;
+use App\Models\UserStreak;
 use App\Models\Question;
 use App\Models\TestQuestion;
 use App\TopicStatus;
@@ -14,9 +16,34 @@ use Illuminate\Support\Facades\DB;
 
 class SelfTestService
 {
+    protected function validateTopicAccess(User $user, Topic $topic): void
+    {
+        $progress = UserTopicProgress::where('user_id', $user->id)
+            ->where('topic_id', $topic->id)
+            ->first();
+
+        if (!$progress) {
+            // No progress record exists - check if this should be unlocked by default
+            if ($topic->prerequisite_level == 1) {
+                // First level topics are unlocked by default
+                return;
+            } else {
+                throw new \Exception("Šī tēma ir bloķēta. Vispirms nokārtojiet iepriekšējās tēmas.");
+            }
+        }
+
+        $status = $progress->status;
+
+        if ($status === TopicStatus::Locked) {
+            throw new \Exception("Šī tēma ir bloķēta. Vispirms nokārtojiet iepriekšējās tēmas.");
+        }
+    }
     public function startSelfTest(User $user, Topic $topic, int $questionCount = 10, ?int $grade = null): Test
     {
         return DB::transaction(function () use ($user, $topic, $questionCount, $grade) {
+            // Check if topic is unlocked for the user
+            $this->validateTopicAccess($user, $topic);
+            
             // Select adaptive questions based on user's performance history
             $questions = $this->selectAdaptiveQuestions($user, $topic, $questionCount, $grade);
 
@@ -31,6 +58,9 @@ class SelfTestService
                 'user_id' => $user->id,
                 'topic_id' => $topic->id,
                 'type' => 'self_test',
+                'test_type' => 'self',
+                'grade' => $grade,
+                'status' => 'in_progress',
                 'total_questions' => $actualQuestionCount,
                 'time_limit_seconds' => null, // Self-tests have no time limit
                 'started_at' => Carbon::now(),
@@ -92,6 +122,7 @@ class SelfTestService
                 'score_correct' => $scoreCorrect,
                 'score_total' => $scoreTotal,
                 'passed' => false, // Self-tests don't have pass/fail
+                'status' => 'completed',
                 'submitted_at' => Carbon::now(),
                 'metadata' => [
                     'detailed_results' => $detailedResults,
@@ -104,6 +135,26 @@ class SelfTestService
             $xpAwarded = $this->calculateXpAward($scoreCorrect, $scoreTotal, $detailedResults);
             $user = $test->user;
             $user->increment('xp', $xpAwarded);
+
+            // Create activity record
+            $topic = $test->topic;
+            UserActivity::createActivity(
+                $user->id,
+                'test_completed',
+                "Nokārtots pašpārbaudes tests - {$topic->name}",
+                $xpAwarded,
+                [
+                    'test_id' => $test->id,
+                    'topic_id' => $topic->id,
+                    'test_type' => 'self',
+                    'score' => $scoreCorrect,
+                    'total' => $scoreTotal,
+                    'percentage' => $percentage
+                ]
+            );
+
+            // Update learning streak
+            UserStreak::updateStreak($user->id, 'learning');
 
             return [
                 'test' => $test,

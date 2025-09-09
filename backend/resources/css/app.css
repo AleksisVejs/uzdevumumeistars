@@ -6,16 +6,16 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
-/* Dark theme as default */
+/* Light theme as default */
 html {
-    color-scheme: dark;
+    color-scheme: light;
 }
 
-/* Custom selection styling for dark theme */
+/* Custom selection styling for light theme */
 ::selection {
     background-color: rgb(16 185 129); /* emerald-500 */
     color: white;
@@ -31,7 +31,7 @@ html {
     --tw-ring-color: rgb(167 243 208);
 }
 
-/* Custom radio button styling for dark theme */
+/* Custom radio button styling for light theme */
 input[type="radio"]:checked {
     background-color: rgb(16 185 129); /* emerald-500 */
     border-color: rgb(16 185 129);
@@ -52,19 +52,141 @@ input[type="radio"]:checked {
     transform: scale(1);
 }
 
-/* Dark theme custom styles */
-.dark-card {
-    @apply bg-gray-800 border-gray-700 text-gray-100;
+/* Glassmorphic Design System - Using standard Tailwind classes */
+.glass-input {
+    @apply w-full rounded-xl bg-white/60 backdrop-blur-md border border-white/30 px-4 py-2 text-gray-900 placeholder-gray-500 focus:border-emerald-400 focus:ring focus:ring-emerald-100 outline-none transition-all duration-300 hover:bg-white/70 hover:border-white/40;
 }
 
-.dark-input {
-    @apply bg-gray-800 border-gray-600 text-gray-100 placeholder-gray-400 focus:border-emerald-500 focus:ring-emerald-200;
+/* Icon styles */
+.icon-default {
+    @apply w-6 h-6 text-gray-900/80;
 }
 
-.dark-button-primary {
-    @apply bg-emerald-500 text-white hover:bg-emerald-600 active:scale-95 transition;
+.icon-button {
+    @apply w-5 h-5 mr-2 text-gray-900/80;
 }
 
-.dark-button-secondary {
-    @apply border border-indigo-500 text-indigo-400 hover:bg-indigo-900/20 active:scale-95 transition;
+.icon-success {
+    @apply text-emerald-500;
+}
+
+.icon-error {
+    @apply text-red-500;
+}
+
+.icon-warning {
+    @apply text-amber-500;
+}
+
+.icon-info {
+    @apply text-blue-500;
+}
+
+/* Gamification elements */
+.streak-card {
+    @apply rounded-2xl bg-gradient-to-br from-white/40 via-gray-50/30 to-white/20 backdrop-blur-md border border-white/30 shadow-md p-6 hover:shadow-lg transition-all duration-300 flex items-center space-x-3;
+}
+
+.badge {
+    @apply rounded-full bg-indigo-100/80 text-indigo-700 p-3 flex items-center justify-center backdrop-blur-sm;
+}
+
+.leaderboard-item {
+    @apply flex items-center space-x-3 p-3 rounded-xl bg-white/40 backdrop-blur-sm hover:bg-white/60 transition-all;
+}
+
+/* Animations */
+@keyframes pop-in {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.animate-pop-in {
+    animation: pop-in 0.3s ease-out;
+}
+
+/* Container styles */
+.container-main {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+/* Enhanced responsive design */
+@media (max-width: 640px) {
+    .container-main {
+        @apply px-3;
+    }
+}
+
+/* Enhanced hover effects */
+.hover-lift {
+    @apply transition-all duration-300 ease-out;
+}
+
+.hover-lift:hover {
+    @apply -translate-y-1 shadow-lg;
+}
+
+.hover-scale {
+    @apply transition-transform duration-200 ease-out;
+}
+
+.hover-scale:hover {
+    @apply scale-105;
+}
+
+/* Enhanced button interactions */
+.btn-interactive {
+    @apply transition-all duration-200 ease-out cursor-pointer;
+}
+
+.btn-interactive:hover {
+    @apply transform -translate-y-0.5 shadow-lg;
+}
+
+.btn-interactive:active {
+    @apply transform scale-95;
+}
+
+/* Ensure buttons have proper cursor */
+button:not(:disabled) {
+    cursor: pointer !important;
+}
+
+button:disabled {
+    cursor: not-allowed !important;
+}
+
+/* Specific styling for GlassButton component */
+.rounded-full.backdrop-blur-md:not(:disabled) {
+    cursor: pointer !important;
+}
+
+.rounded-full.backdrop-blur-md:disabled {
+    cursor: not-allowed !important;
+}
+
+/* Typography */
+.text-page-title {
+    @apply text-2xl font-semibold text-gray-900;
+}
+
+.text-section-title {
+    @apply text-xl font-semibold text-gray-800;
+}
+
+.text-body {
+    @apply text-base text-gray-700 leading-relaxed;
+}
+
+.text-small {
+    @apply text-sm text-gray-500;
 }
